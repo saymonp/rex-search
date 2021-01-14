@@ -1,7 +1,7 @@
 from tika import parser
 import re
 
-class PdfReader(Object):
+class PdfReader(object):
 
     def __init__(self):
         pass
