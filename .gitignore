@@ -16,6 +16,7 @@ var/
 .installed.cfg
 *.egg
 *.pdf
+*.txt
 
 # Serverless directories
 .serverless
