@@ -27,3 +27,11 @@ class PdfReader(object):
         parsed_data_full = parsed_data_full['content']
 
         return re.findall('<div class="page">(.[\s\S]*?)<\/div>', parsed_data_full)
+
+    def parse_from_file(self, file=str):
+        headers = {
+            'X-Tika-PDFextractInlineImages': 'true',
+        }
+        parsed = parser.from_file(file)
+        print(parsed)
+        print(parsed['content'])

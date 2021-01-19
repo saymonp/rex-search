@@ -1,13 +1,11 @@
 from rex.data_search import DataSearch
 
 def test_search():
-    with open('c:/Users/saymo/Desktop/rex-search/sample_read_by_page.txt', "r", encoding='utf-8') as f:
+    with open('c:/Users/saymo/Desktop/rex-search/test.txt', "r", encoding='utf-8') as f:
         text = f.read()
     
-    # text = open('c:/Users/saymo/Desktop/rex-search/sample_read_by_page.txt', "r", encoding='utf-8')
-    print(text)
     dt = DataSearch()
-    #print(text)
-    response = dt.search(text, "CLAUDIO OLDEMAR KOHLMANN")
+
+    response = dt.search(text, 37709)
 
     print(response)
