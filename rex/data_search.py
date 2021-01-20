@@ -1,5 +1,6 @@
 import re
 import csv
+from typing import List
 
 from rex.pdf_reader import PdfReader
 
@@ -10,14 +11,14 @@ class DataSearch(object):
         pass
 
     
-    def search_type_1(self, data=str, id=str):
+    def search_type_1(self, data:str, id:str):
         """19967\.97"""
         employee = f"EMPREGADO - {id} - .+"
         query = employee+"|\w\w\w\/201[0-8]|ORDENADO \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 1 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 2 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 3 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ADIANT\.FERIAS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|FERIAS NORMAIS 1\/3 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))"
 
         return re.findall(query, data)
 
-    def search_type_2(self, data=str, id=str):
+    def search_type_2(self, data:str, id:str):
         employee = f"Empregado: {id} .+"
         query = employee+"|ANO: 201[1-8]|MÊS: \d{2}|V01 ORDENADO R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCK REMUNERACAO VARIAVEL 1 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCM REMUNERACAO VARIAVEL 2 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCL REMUNERACAO VARIAVEL 3 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VF1 FERIAS NORMAIS R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|A01 ORDENADO-AC COLETIVO R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VF1 SALARIO ADIANTADO FERIAS R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))"
 
@@ -45,17 +46,13 @@ class DataSearch(object):
 
         return (match.group(1), match.group(2))
 
-    def search_to_csv(self, file=str, id=str, type=int):
+    def search_by_page(self, pages:List[str], id:str, type:int):
         if type == 1:
-            return self.search_to_csv_type_1(file, id)
+            return self.search_by_page_type_1(pages, id)
         if type == 2:
-            return self.search_to_csv_type_2(file, id)
+            return self.search_by_page_type_2(pages, id)
     
-    def search_to_csv_type_2(self, file=str, id=str):
-        pdf = PdfReader()
-
-        pages = pdf.read_by_page(file)
-
+    def search_by_page_type_2(self, pages:List[str], id:str):
         tocsv = []
         keys = []
 
@@ -99,25 +96,11 @@ class DataSearch(object):
                                "VCL Remuneração Variável 3": str(remvar3).replace(".", ",") if remvar3 > 0 else "",
                                "VF1 Salário Adiantado Férias": str(salarioadi).replace(".", ",") if salarioadi > 0 else ""}
 
-                if first == True:
-                    keys = dict_to_csv.keys()
-                    first = False
-
                 tocsv.append(dict_to_csv)
 
-        with open(f'{id}07.2014-12.2017.csv', 'w', newline='') as output_file:
-            dict_writer = csv.DictWriter(output_file, keys)
-            dict_writer.writeheader()
-            dict_writer.writerows(tocsv)
+        return tocsv
 
-        return {"ok": id}
-
-    def search_to_csv_type_1(self, file=str, id=str):
-        """EMPREGADO - 19967\.97 - .+|\w\w\w\/201[0-8]|ORDENADO \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 1 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 2 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 3 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ADIANT\.FERIAS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|FERIAS NORMAIS 1\/3 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))"""
-        pdf = PdfReader()
-
-        pages = pdf.read_by_page(file)
-
+    def search_by_page_type_1(self, pages:List[str], id:str):
         tocsv = []
         keys = []
 
@@ -170,15 +153,16 @@ class DataSearch(object):
                                 "VCL Remuneração Variável 3": str(remvar3).replace(".", ",") if remvar3 > 0 else "",
                                 "VF1 Salário Adiantado Férias": str(salarioadi).replace(".", ",") if salarioadi > 0 else ""}
 
-                    if first == True:
-                        keys = dict_to_csv.keys()
-                        first = False
 
                     tocsv.append(dict_to_csv)
 
-        with open(f'{identifier}-01.2010-06.2014.csv', 'w', newline='') as output_file:
+        return tocsv
+
+    def data_to_csv(self, id, tocsv, mode:str):
+        keys = tocsv[0].keys()
+        # identifier = id.replace("\\", "")
+
+        with open(f'{id}.csv', mode, newline='') as output_file:
             dict_writer = csv.DictWriter(output_file, keys)
             dict_writer.writeheader()
             dict_writer.writerows(tocsv)
-
-        return {"ok": id}
