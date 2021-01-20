@@ -17,6 +17,10 @@ var/
 *.egg
 *.pdf
 *.txt
+*.csv
+*.csv#
+*.ini
+fixtures/
 
 # Serverless directories
 .serverless
