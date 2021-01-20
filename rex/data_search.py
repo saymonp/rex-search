@@ -17,8 +17,8 @@ class DataSearch(object):
 
         return re.findall(query, data)
 
-    def search_type_2(self, data=str, id=int):
-        employee = f"Empregado: {str(id)} .+"
+    def search_type_2(self, data=str, id=str):
+        employee = f"Empregado: {id} .+"
         query = employee+"|ANO: 201[1-8]|MÊS: \d{2}|V01 ORDENADO R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCK REMUNERACAO VARIAVEL 1 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCM REMUNERACAO VARIAVEL 2 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCL REMUNERACAO VARIAVEL 3 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VF1 FERIAS NORMAIS R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|A01 ORDENADO-AC COLETIVO R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VF1 SALARIO ADIANTADO FERIAS R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))"
 
         return re.findall(query, data)
@@ -129,15 +129,11 @@ class DataSearch(object):
             
             if matches[0].startswith(f"EMPREGADO - {identifier}"):
 
-                part_one = [] # "EMPREGADO - "
-                part_two = [] # "JUN/2010"
-
                 for i in range(len(matches)):
                     if re.match("\w{3}\/\d{4}", matches[i]):
-                        matches_separeted = (part_one[:i], part_two[i:])
+                        matches_separeted = (matches[:i], matches[i:])
                         break
 
-                
                 for list_matches in matches_separeted:       
                     ordenado = feriasnorm = ordenadocol = remvar1 = remvar1 = remvar2 = remvar3 = salarioadi = 0
                     a = f"{self.get_month(matches[2])}/{self.get_year(matches[1])}"
