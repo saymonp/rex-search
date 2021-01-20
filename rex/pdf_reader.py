@@ -33,5 +33,5 @@ class PdfReader(object):
             'X-Tika-PDFextractInlineImages': 'true',
         }
         parsed = parser.from_file(file)
-        print(parsed)
-        print(parsed['content'])
+        
+        return parsed['content']

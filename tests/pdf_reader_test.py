@@ -33,4 +33,6 @@ def test_read_by_page():
 def test_parse_file():
     pdf = PdfReader()
 
-    pdf.parse_from_file(r"c:/Users/saymo/Desktop/rex-search/tests/fixtures/FOLHA DE PRESENÇA - 12.2012.pdf")
+    response = pdf.parse_from_file(r"c:/Users/saymo/Desktop/rex-search/tests/fixtures/FOLHA DE PRESENÇA - 12.2012.pdf")
+
+    print(response)
