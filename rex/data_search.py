@@ -12,10 +12,8 @@ class DataSearch(object):
         ...
 
     def search(self, data=str, id=int):
-        """37709"""
-        """"EMPREGADO — \d+\.\d+ |CLAUDIO OLDEMAR KOHLMANN| \D\D\D\/201[0-8]|MENSAL\.SINDICAL (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ABONO DED\.INT\. (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|\D\D\D\/201[0-8]"""
         employee = f"Empregado: {str(id)} .+"
-        query = employee+"|ANO: 201[0-8]|MÊS: \d{2}|V01 ORDENADO R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCK REMUNERACAO VARIAVEL 1 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCM REMUNERACAO VARIAVEL 2 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCL REMUNERACAO VARIAVEL 3 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VF1 FERIAS NORMAIS R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|A01 ORDENADO-AC COLETIVO R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))"
+        query = employee+"|ANO: 201[1-8]|MÊS: \d{2}|V01 ORDENADO R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCK REMUNERACAO VARIAVEL 1 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCM REMUNERACAO VARIAVEL 2 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VCL REMUNERACAO VARIAVEL 3 R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VF1 FERIAS NORMAIS R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|A01 ORDENADO-AC COLETIVO R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|VF1 SALARIO ADIANTADO FERIAS R\$ (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))"
         
         return re.findall(query, data) 
 
@@ -52,7 +50,7 @@ class DataSearch(object):
             matches = self.search(page, id)
 
             if matches[0].startswith(f"Empregado: {id}"):
-                ordenado = feriasnorm = ordenadocol = remvar1 = remvar1 = remvar2 = remvar3 = ""
+                ordenado = feriasnorm = ordenadocol = remvar1 = remvar1 = remvar2 = remvar3 = salarioadi = ""
             
                 for m in matches:
                     if m.startswith("V01 ORDENADO"):
@@ -67,14 +65,18 @@ class DataSearch(object):
                         remvar2 = self.get_key_value(m)[1]
                     if m.startswith("VCL REMUNERACAO VARIAVEL 3"):
                         remvar3 = self.get_key_value(m)[1]
+                    if m.startswith("VF1 SALARIO ADIANTADO FERIAS"):
+                        salarioadi = self.get_key_value(m)[1]
 
+                print(matches[2], matches[1])
                 dict_to_csv = {matches[0]: f"{self.get_month(matches[2])}/{self.get_year(matches[1])}",
-                "Ordenado": ordenado,
-                "Ordenado AC Coletivo": ordenadocol,
-                "Férias Normais": feriasnorm,
-                "Remuneração variável 1": remvar1,
-                "Remuneração variável 2": remvar2,
-                "Remuneração variável 3": remvar3}
+                "V01 Ordenado": ordenado,
+                "A01 Ordenado AC Coletivo": ordenadocol,
+                "VF1 Férias Normais": feriasnorm,
+                "VCK Remuneração Variável 1": remvar1,
+                "VCM Remuneração Variável 2": remvar2,
+                "VCL Remuneração Variável 3": remvar3,
+                "VF1 Salário Adiantado Férias": salarioadi}
 
                 if first == True:
                     keys = dict_to_csv.keys()
