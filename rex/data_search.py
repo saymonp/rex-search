@@ -87,7 +87,7 @@ class DataSearch(object):
                         salarioadi += float(self.get_key_value(m)
                                             [1].replace(".", "").replace(",", "."))
 
-                dict_to_csv = {matches[0]: f"{self.get_month(matches[2])}/{self.get_year(matches[1])}",
+                dict_to_csv = {re.match("(Empregado: \d\d\d\d\d)", matches[0]).group(1): f"{self.get_month(matches[2])}/{self.get_year(matches[1])}",
                                "V01 Ordenado": str(ordenado).replace(".", ",") if ordenado > 0 else "",
                                "A01 Ordenado AC Coletivo": str(ordenadocol).replace(".", ",") if ordenadocol > 0 else "",
                                "VF1 Férias Normais": str(feriasnorm).replace(".", ",") if feriasnorm > 0 else "",
@@ -116,7 +116,7 @@ class DataSearch(object):
                     if re.match("\w{3}\/\d{4}", matches[i]):
                         matches_separeted = (matches[:i], [matches[0]]+matches[i:])
                         break
-
+                not_first = False
                 for list_matches in matches_separeted:       
                     ordenado = feriasnorm = ordenadocol = remvar1 = remvar1 = remvar2 = remvar3 = salarioadi = 0
                     employee = re.search("(.+) \s* (\w{3}\/\d{4})", list_matches[0])
@@ -143,8 +143,8 @@ class DataSearch(object):
                         if m.startswith("FERIAS NORMAIS 1/3"):
                             salarioadi += float(self.get_key_value_type_1(m)
                                                 [1].replace(".", "").replace(",", "."))
-
-                    dict_to_csv = {employee.group(1).replace(" ", "").replace("-", " "): employee.group(2),
+                    print(list_matches)
+                    dict_to_csv = {re.match("(EMPREGADO - \d\d\d\d\d\.\d\d)", employee.group(1)).group(1): list_matches[1] if not_first == True else employee.group(2),
                                 "V01 Ordenado": str(ordenado).replace(".", ",") if ordenado > 0 else "",
                                 "A01 Ordenado AC Coletivo": str(ordenadocol).replace(".", ",") if ordenadocol > 0 else "",
                                 "VF1 Férias Normais": str(feriasnorm).replace(".", ",") if feriasnorm > 0 else "",
@@ -152,17 +152,17 @@ class DataSearch(object):
                                 "VCM Remuneração Variável 2": str(remvar2).replace(".", ",") if remvar2 > 0 else "",
                                 "VCL Remuneração Variável 3": str(remvar3).replace(".", ",") if remvar3 > 0 else "",
                                 "VF1 Salário Adiantado Férias": str(salarioadi).replace(".", ",") if salarioadi > 0 else ""}
-
+                    not_first = True
 
                     tocsv.append(dict_to_csv)
 
         return tocsv
 
-    def data_to_csv(self, id, tocsv, mode:str):
+    def data_to_csv(self, id, name, tocsv, mode:str):
         keys = tocsv[0].keys()
         # identifier = id.replace("\\", "")
 
-        with open(f'{id}.csv', mode, newline='') as output_file:
+        with open(f'{id}-{name}.csv', mode, newline='') as output_file:
             dict_writer = csv.DictWriter(output_file, keys)
             dict_writer.writeheader()
             dict_writer.writerows(tocsv)
