@@ -128,15 +128,16 @@ class DataSearch(object):
             identifier = id.replace("\\", "")
             
             if matches[0].startswith(f"EMPREGADO - {identifier}"):
-
+                
                 for i in range(len(matches)):
                     if re.match("\w{3}\/\d{4}", matches[i]):
-                        matches_separeted = (matches[:i], matches[i:])
+                        matches_separeted = (matches[:i], [matches[0]]+matches[i:])
                         break
 
                 for list_matches in matches_separeted:       
                     ordenado = feriasnorm = ordenadocol = remvar1 = remvar1 = remvar2 = remvar3 = salarioadi = 0
-                    a = f"{self.get_month(matches[2])}/{self.get_year(matches[1])}"
+                    employee = re.search("(.+) \s* (\w{3}\/\d{4})", list_matches[0])
+
                     for m in list_matches:
                         if m.startswith("ORDENADO"):
                             ordenado += float(self.get_key_value_type_1(m)
@@ -160,7 +161,7 @@ class DataSearch(object):
                             salarioadi += float(self.get_key_value_type_1(m)
                                                 [1].replace(".", "").replace(",", "."))
 
-                    dict_to_csv = {matches[0]: f"{self.get_month(matches[2])}/{self.get_year(matches[1])}",
+                    dict_to_csv = {employee.group(1).replace(" ", "").replace("-", " "): employee.group(2),
                                 "V01 Ordenado": str(ordenado).replace(".", ",") if ordenado > 0 else "",
                                 "A01 Ordenado AC Coletivo": str(ordenadocol).replace(".", ",") if ordenadocol > 0 else "",
                                 "VF1 Férias Normais": str(feriasnorm).replace(".", ",") if feriasnorm > 0 else "",
