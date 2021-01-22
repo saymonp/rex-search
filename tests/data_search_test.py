@@ -50,12 +50,12 @@ def test_search_all_by_page():
     pages_2018 = pdf.read_by_page(folha_2018)
 
     dt = DataSearch()
-    #  37243.36 CAROLINE GRUTKA SPERONI
-    dict_2010_2014 = dt.search_by_page(pages_2010_2014, "37243\.36", type=1)
-    dict_014_2017 = dt.search_by_page(pages_2014_2017, "37243", type=2)
-    dict_2018 = dt.search_by_page(pages_2018, "37243", type=2)
+    #  32221 CLAUDIA BRUXEL
+    dict_2010_2014 = dt.search_by_page(pages_2010_2014, "32221\.44", type=1)
+    dict_014_2017 = dt.search_by_page(pages_2014_2017, "32221", type=2)
+    dict_2018 = dt.search_by_page(pages_2018, "32221", type=2)
 
-    dt.data_to_csv("37243", "CAROLINE GRUTKA SPERONI", dict_2010_2014, "w")
-    dt.data_to_csv("37243", "CAROLINE GRUTKA SPERONI", dict_014_2017, "a")
-    dt.data_to_csv("37243", "CAROLINE GRUTKA SPERONI", dict_2018, "a")
+    dt.data_to_csv("32221", "CLAUDIA BRUXEL", dict_2010_2014, "w")
+    dt.data_to_csv("32221", "CLAUDIA BRUXEL", dict_014_2017, "a")
+    dt.data_to_csv("32221", "CLAUDIA BRUXEL", dict_2018, "a")
 
