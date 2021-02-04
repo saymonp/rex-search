@@ -13,7 +13,7 @@ class DataSearch(object):
     def search_type_1(self, data: str, id: str):
         """19967\.97"""
         employee = f"EMPREGADO - {id} - .+"
-        query = employee+"|\w\w\w\/201[0-8]|ORDENADO \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 1 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 2 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 3 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|COMISSAO FIXA \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ABONO DED\.INT\. \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIF OPER NEGOCIOS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|BONUS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ADIC\.REM\.COMP\.DISSID \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ADIC\.ACOR\.COL\.2008\/9 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIF OPER NEGOCIOS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ANUENIO \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|PRORROG\.SAL\.MATERN\. \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))"
+        query = employee+"|\w\w\w\/201[0-8]|ORDENADO \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 1 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 2 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 3 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|COMISSAO FIXA \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ABONO DED\.INT\. \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIF OPER NEGOCIOS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|BONUS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ADIC\.REM\.COMP\.DISSID \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ADIC\.ACOR\.COL\.2008\/9 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIF OPER NEGOCIOS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ANUENIO \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|PRORROG\.SAL\.MATERN\. \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIFIC\.CAIXA \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))"
 
         return re.findall(query, data)
 
@@ -122,16 +122,17 @@ class DataSearch(object):
                             comfixsubst += float(self.get_key_value(m)
                                           [1].replace(".", "").replace(",", "."))
                     if m.startswith("VCR BONUS CONSORCIO POL INCENTI"):
-                            bonusconpolin += float(self.get_key_value(m)
+                            bonus += float(self.get_key_value(m)
                                           [1].replace(".", "").replace(",", "."))
+                    
 
                 dict_to_csv = {re.match("(Empregado: \d\d\d\d\d)", matches[0]).group(1): f"{self.get_month(matches[2])}/{self.get_year(matches[1])}",
                                "V01 Ordenado": str(ordenado).replace(".", ",") if ordenado > 0 else "",
-                               "C01 COMPLEMENTO ORDENADO": str(comporde).replace(".", ",") if comporde > 0 else "",
+                               "C01 COMPLEMENTO ORDENADO/A01 Ordenado AC Coletivo": str(comporde).replace(".", ",") if comporde > 0 else "",
                                "VCK Remuneração Variável 1": str(remvar1).replace(".", ",") if remvar1 > 0 else "",
                                "VCM Remuneração Variável 2": str(remvar2).replace(".", ",") if remvar2 > 0 else "",
                                "VCL Remuneração Variável 3": str(remvar3).replace(".", ",") if remvar3 > 0 else "",
-                               "A01 Ordenado AC Coletivo": str(ordenadocol).replace(".", ",") if ordenadocol > 0 else "",
+                               #"A01 Ordenado AC Coletivo": str(ordenadocol).replace(".", ",") if ordenadocol > 0 else "",
                                "V15 ADIC. ACOR. COL.2008/9": str(adicacor).replace(".", ",") if adicacor > 0 else "",
                                "V13 ADIC REM COMP DISSID": str(adicrem).replace(".", ",") if adicrem > 0 else "",
                                #"VCE GRATIFIC OPERADOR NEGOCIOS": str(gratifop).replace(".", ",") if gratifop > 0 else "",
@@ -139,13 +140,14 @@ class DataSearch(object):
                                #"V45 COMISSAO FIXA - SUBST": str(comfixasub).replace(".", ",") if comfixasub > 0 else "",
                                #"VM1 SALARIO MATERNIDADE": str(salariomat).replace(".", ",") if salariomat > 0 else "",
                                "V17 ABONO DEDIC INTEGRAL - ADI": str(adi).replace(".", ",") if adi > 0 else "",
-                               "VCF BONUS VENDA CONSORCIO": str(bonus).replace(".", ",") if bonus > 0 else "",
-                               #"V12 COMISSAO FIXA": str(comfix).replace(".", ",") if comfix > 0 else "",
-                               #"V21 ANUENIO": str(anuenio).replace(".", ",") if anuenio > 0 else "",
-                               "VF1 Férias Normais": str(feriasnorm).replace(".", ",") if feriasnorm > 0 else "",
-                               "VF1 SALARIO ADIANTADO FERIAS": str(salaradi).replace(".", ",") if salaradi > 0 else "",
+                               "BONUS/VCF BONUS VENDA CONSORCIO/VCR BONUS CONSORCIO POL INCENTI": str(bonus).replace(".", ",") if bonus > 0 else "",
+                               "V12 COMISSAO FIXA/V45 COMISSAO FIXA - SUBST": str(comfix).replace(".", ",") if comfix > 0 else "",
+                               #"VF1 Férias Normais": str(feriasnorm).replace(".", ",") if feriasnorm > 0 else "",
+                               #"VF1 SALARIO ADIANTADO FERIAS": str(salaradi).replace(".", ",") if salaradi > 0 else "",
                                #"V45 COMISSAO FIXA - SUBST": str(comfixsubst).replace(".", ",") if comfixsubst > 0 else "",
                                #"VCR BONUS CONSORCIO POL INCENTI" : str(bonusconpolin).replace(".", ",") if bonusconpolin > 0 else "",
+                               "VCE GRATIFIC OPERADOR NEGOCIOS": str(gratifop).replace(".", ",") if gratifop > 0 else "",
+                               "V21 ANUENIO": str(anuenio).replace(".", ",") if anuenio > 0 else "",
                                }
 
                 tocsv.append(dict_to_csv)
@@ -171,7 +173,7 @@ class DataSearch(object):
                         break
                 not_first = False
                 for list_matches in matches_separeted:
-                    ordenado = comfixsubst = prosalmat = adi = anuenio = comfix = adicrem = gratifop = adicacor = bonusvenda = comporde = feriasnorm = remvar1 = remvar1 = remvar2 = remvar3 = complemetoord = comfixa = abonodedic = bonus = salarioadi = ordenadocol = 0
+                    ordenado = comfixsubst = gratific = prosalmat = adi = anuenio = comfix = adicrem = gratifop = adicacor = bonusvenda = comporde = feriasnorm = remvar1 = remvar1 = remvar2 = remvar3 = complemetoord = comfixa = abonodedic = bonus = salarioadi = ordenadocol = 0
                     employee = re.search(
                         "(.+) \s* (\w{3}\/\d{4})", list_matches[0])
 
@@ -192,10 +194,10 @@ class DataSearch(object):
                             complemetoord += float(self.get_key_value_type_1(m)
                                                    [1].replace(".", "").replace(",", "."))
                         if m.startswith("A01 ORDENADO-AC COLETIVO"):
-                            ordenadocol += float(self.get_key_value_type_1(m)
+                            complemetoord += float(self.get_key_value_type_1(m)
                                                  [1].replace(".", "").replace(",", "."))
                         if m.startswith("VCF BONUS VENDA CONSORCIO"):
-                            bonusvenda += float(self.get_key_value_type_1(m)
+                            bonus += float(self.get_key_value_type_1(m)
                                                 [1].replace(".", "").replace(",", "."))
                         if m.startswith("ADIC.REM.COMP.DISSID"):
                             adicrem += float(self.get_key_value_type_1(m)
@@ -207,7 +209,7 @@ class DataSearch(object):
                             bonus += float(self.get_key_value_type_1(m)
                                            [1].replace(".", "").replace(",", "."))
                         if m.startswith("GRATIF OPER NEGOCIOS"):
-                            gratifop += float(self.get_key_value_type_1(m)
+                            gratific += float(self.get_key_value_type_1(m)
                                             [1].replace(".", "").replace(",", "."))
                         if m.startswith("COMISSAO FIXA"):
                             comfix += float(self.get_key_value_type_1(m)
@@ -220,25 +222,28 @@ class DataSearch(object):
                                           [1].replace(".", "").replace(",", "."))
                         if m.startswith("PRORROG.SAL.MATERN."):
                             prosalmat += float(self.get_key_value_type_1(m)
-                                          [1].replace(".", "").replace(",", "."))                            
+                                          [1].replace(".", "").replace(",", "."))     
+                        if m.startswith("GRATIFIC.CAIXA"):
+                            gratific += float(self.get_key_value_type_1(m)
+                                          [1].replace(".", "").replace(",", "."))                       
 
                     dict_to_csv = {re.match("(EMPREGADO - \d\d\d\d\d\.\d\d)", employee.group(1)).group(1): list_matches[1] if not_first == True else employee.group(2),
                                    "V01 Ordenado": str(ordenado).replace(".", ",") if ordenado > 0 else "",
-                                   "C01 COMPLEMENTO ORDENADO": str(comporde).replace(".", ",") if comporde > 0 else "",
+                                   "C01 COMPLEMENTO ORDENADO/A01 Ordenado AC Coletivo": str(complemetoord).replace(".", ",") if complemetoord > 0 else "",
                                    "VCK Remuneração Variável 1": str(remvar1).replace(".", ",") if remvar1 > 0 else "",
                                    "VCM Remuneração Variável 2": str(remvar2).replace(".", ",") if remvar2 > 0 else "",
                                    "VCL Remuneração Variável 3": str(remvar3).replace(".", ",") if remvar3 > 0 else "",
                                    #"VCF BONUS VENDA CONSORCIO": str(bonusvenda).replace(".", ",") if bonusvenda > 0 else "",
-                                   "A01 Ordenado AC Coletivo": str(ordenadocol).replace(".", ",") if ordenadocol > 0 else "",
+                                   #"A01 Ordenado AC Coletivo": str(ordenadocol).replace(".", ",") if ordenadocol > 0 else "",
                                    "V15 ADIC. ACOR. COL.2008/9": str(adicacor).replace(".", ",") if adicacor > 0 else "",
                                    "V13 ADIC REM COMP DISSID": str(adicrem).replace(".", ",") if adicrem > 0 else "",
                                    "V17 ABONO DEDIC INTEGRAL - ADI": str(adi).replace(".", ",") if adi > 0 else "",
-                                   "BONUS": str(bonus).replace(".", ",") if bonus > 0 else "",
+                                   "BONUS/VCF BONUS VENDA CONSORCIO": str(bonus).replace(".", ",") if bonus > 0 else "",
                                    #"Prorrog. Sal. Matern.": str(prosalmat).replace(".", ",") if prosalmat > 0 else "",
-                                   #"V12 COMISSAO FIXA": str(comfix).replace(".", ",") if comfix > 0 else "",
-                                   #"VCE GRATIFIC OPERADOR NEGOCIOS": str(gratifop).replace(".", ",") if gratifop > 0 else "",
-                                   #"V21 ANUENIO": str(anuenio).replace(".", ",") if anuenio > 0 else "",
-                                   "VF1 Férias Normais": str(feriasnorm).replace(".", ",") if feriasnorm > 0 else "",
+                                   "V12 COMISSAO FIXA": str(comfix).replace(".", ",") if comfix > 0 else "",
+                                   "VCE GRATIFIC OPERADOR NEGOCIOS/GRATIFIC.CAIXA": str(gratific).replace(".", ",") if gratific > 0 else "",
+                                   "V21 ANUENIO": str(anuenio).replace(".", ",") if anuenio > 0 else "",
+                                   #"VF1 Férias Normais": str(feriasnorm).replace(".", ",") if feriasnorm > 0 else "",
                                    }
                     not_first = True
 
@@ -254,3 +259,13 @@ class DataSearch(object):
             dict_writer = csv.DictWriter(output_file, keys)
             dict_writer.writeheader()
             dict_writer.writerows(tocsv)
+
+    def get_extra_hours(self, id:str, name:str, data:str):
+        hours = re.findall("(?:Média ((?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))))", data)
+        tocsv = []
+        for h in hours:
+            tocsv.append({"Dias em HE": h})
+        
+        self.data_to_csv(id, name, tocsv, "w")
+
+        return hours
