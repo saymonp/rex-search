@@ -12,7 +12,7 @@ class DataSearch(object):
 
     def search_type_1(self, data: str, id: str):
         """19967\.97"""
-        employee = f"EMPREGADO - {id} - .+"
+        employee = f"EMPREGADO - {id}\.\d{2} - .+"
         query = employee+"|\w\w\w\/201[0-8]|ORDENADO \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 1 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 2 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 3 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|COMISSAO FIXA \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ABONO DED\.INT\. \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIF OPER NEGOCIOS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|BONUS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ADIC\.REM\.COMP\.DISSID \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ADIC\.ACOR\.COL\.2008\/9 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIF OPER NEGOCIOS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ANUENIO \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|PRORROG\.SAL\.MATERN\. \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIFIC\.CAIXA \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))"
 
         return re.findall(query, data)
@@ -260,12 +260,9 @@ class DataSearch(object):
             dict_writer.writeheader()
             dict_writer.writerows(tocsv)
 
-    def get_extra_hours(self, id:str, name:str, data:str):
-        hours = re.findall("(?:Média ((?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))))", data)
-        tocsv = []
-        for h in hours:
-            tocsv.append({"Dias em HE": h})
-        
-        self.data_to_csv(id, name, tocsv, "w")
+    @staticmethod
+    def get_extra_hours(self, data:str):
+        hours = re.findall("\w{3}\/\d{2}.+", data)
 
-        return hours
+        for h in hours:
+            print(h.split()[5])
