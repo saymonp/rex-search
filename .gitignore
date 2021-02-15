@@ -21,6 +21,7 @@ var/
 *.csv#
 *.ini
 fixtures/
+*.pkl
 
 # Serverless directories
 .serverless
