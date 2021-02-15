@@ -1,3 +1,5 @@
+import pickle
+
 from rex.data_search import DataSearch
 from rex.pdf_reader import PdfReader
 
@@ -86,81 +88,86 @@ def test_search_all_by_page():
     dt.data_to_csv(id_2, name, dict_2018, "a")
 
 
-def test_tika():
-    a = [1,2,3,4]
-    for e in a:
-        print(e)
-    # folha_2010_2014 = 'G:/Trabalho/SEEB IJUI/SEEB IJUI CD/FOLHA DE PAGAMENTO - 01.2010 A 06.2014.pdf'
-    # folha_2014_2017 = 'G:/Trabalho/SEEB IJUI/SEEB IJUI CD/FOLHA DE PAGAMENTO - 07.2014 A 12.2017.pdf'
-    # folha_2018 = 'G:/Trabalho/SEEB IJUI/SEEB IJUI CD/FOLHA DE PAGAMENTO - 2018.pdf'
-
-    # pdf = PdfReader()
-
-    # pages_2010_2014 = pdf.read_by_page(folha_2010_2014)
-    # pages_2014_2017 = pdf.read_by_page(folha_2014_2017)
-    # pages_2018 = pdf.read_by_page(folha_2018)
-
-    # text_file = open("complete_read_xml.txt", "w", encoding='utf-8')
-    # n = text_file.write(text)
-    # text_file.close()
-
-
 def test_search_all_by_page_bulk():
-    import tika.parser
+
+    empolyees = [
+        {"name": "MAITHE DE ALMEIDA RIBAS", "id": "39747"},
+        {"name": "MARA MARCIANE PERSCH", "id": "38888"},
+        {"name": "MARCIA CRISTIANE DE LIMA BRITTES", "id": "33557"},
+        {"name": "MARELI TERESINHA DALCIN FREIBERGER", "id": "35192"},
+        {"name": "MARIA ANALIA DE COUTO", "id": "28517"},
+        {"name": "MARIA DE LOURDES DAL FORNO KINALSKI", "id": "23370"},
+        {"name": "MARIA INES FOGACA DOS SANTOS", "id": "29341"},
+        {"name": "MARIA TEREZA SCHEID", "id": "25652"},
+        {"name": "MARIANE ELISA CARVALHO GRATSCH", "id": "36271"},
+        {"name": "MARIANE LAUTERT CANDIDO", "id": "23135"},
+        {"name": "MARILENE FATIMA ILGENFRITZ", "id": "25324"},
+        {"name": "MARINA IVANI MAFALDA RODRIGUES", "id": "26622"},
+        {"name": "MARISA PIENIZ SILVEIRA", "id": "37397"},
+        {"name": "MARLENE BERNIERI", "id": "29161"},
+        {"name": "MARLENE GRATSCH", "id": "20783"},
+        {"name": "MARLI BEHLING SIKACZ", "id": "23768"},
+        {"name": "MARLI TERESINHA SCHWEIG", "id": "27503"},
+        {"name": "MIRTA BRAGA PEIXOTO", "id": "23472"}]
+
+    with open('pages_2010_2014.pkl', 'rb') as f:
+        pages_2010_2014 = pickle.load(f)
+
+    with open('pages_2014_2017.pkl', 'rb') as f:
+        pages_2014_2017 = pickle.load(f)
+
+    with open('pages_2018.pkl', 'rb') as f:
+        pages_2018 = pickle.load(f)
+
+    dt = DataSearch()
+
+    for e in empolyees:
+        name = e["name"]
+        id = e["id"]
+        print(name, id)
+        dict_2010_2014 = dt.search_by_page(pages_2010_2014, id, type=1)
+        dict_014_2017 = dt.search_by_page(pages_2014_2017, id, type=2)
+        dict_2018 = dt.search_by_page(pages_2018, id, type=2)
+
+        mode = "a"
+
+        if len(dict_2010_2014) > 0:
+            print(dict_2010_2014)
+            dt.data_to_csv(id, name, dict_2010_2014, "w")
+        else:
+            mode = "w"
+        if len(dict_014_2017) > 0:
+            # print(mode)
+            dt.data_to_csv(id, name, dict_014_2017, mode)
+            mode = "a"
+        if len(dict_2018) > 0:
+            # print(dict_2018)
+            dt.data_to_csv(id, name, dict_2018, mode)
+
+
+def test_serialize():
     folha_2010_2014 = 'G:/Trabalho/SEEB IJUI/SEEB IJUI CD/FOLHA DE PAGAMENTO - 01.2010 A 06.2014.pdf'
-    # folha_2014_2017 = 'G:/Trabalho/SEEB IJUI/SEEB IJUI CD/FOLHA DE PAGAMENTO - 07.2014 A 12.2017.pdf'
-    # folha_2018 = 'G:/Trabalho/SEEB IJUI/SEEB IJUI CD/FOLHA DE PAGAMENTO - 2018.pdf'
+    folha_2014_2017 = 'G:/Trabalho/SEEB IJUI/SEEB IJUI CD/FOLHA DE PAGAMENTO - 07.2014 A 12.2017.pdf'
+    folha_2018 = 'G:/Trabalho/SEEB IJUI/SEEB IJUI CD/FOLHA DE PAGAMENTO - 2018.pdf'
 
     pdf = PdfReader()
 
     pages_2010_2014 = pdf.read_by_page(folha_2010_2014)
-    # pages_2014_2017 = pdf.read_by_page(folha_2014_2017)
-    # pages_2018 = pdf.read_by_page(folha_2018)
+    pages_2014_2017 = pdf.read_by_page(folha_2014_2017)
+    pages_2018 = pdf.read_by_page(folha_2018)
 
-    # dt = DataSearch()
+    with open('pages_2010_2014.pkl', 'wb') as f:
+        pickle.dump(pages_2010_2014, f)
 
-    # empolyees = [
-    #     {"name": "MAITHE DE ALMEIDA RIBAS ", "id": "39747"},
-    #     {"name": "MARA MARCIANE PERSCH ", "id": "38888"},
-    #     {"name": "MARCIA CRISTIANE DE LIMA BRITTES ", "id": "33557"},
-    #     {"name": "MARELI TERESINHA DALCIN FREIBERGER ", "id": "35192"},
-    #     {"name": "MARIA ANALIA DE COUTO ", "id": "28517"},
-    #     {"name": "MARIA DE LOURDES DAL FORNO KINALSKI ", "id": "23370"},
-    #     {"name": "MARIA INES FOGACA DOS SANTOS ", "id": "29341"},
-    #     {"name": "MARIA TEREZA SCHEID ", "id": "25652"},
-    #     {"name": "MARIANE ELISA CARVALHO GRATSCH ", "id": "36271"},
-    #     {"name": "MARIANE LAUTERT CANDIDO ", "id": "23135"},
-    #     {"name": "MARILENE FATIMA ILGENFRITZ ", "id": "25324"},
-    #     {"name": "MARINA IVANI MAFALDA RODRIGUES ", "id": "26622"},
-    #     {"name": "MARISA PIENIZ SILVEIRA ", "id": "37397"},
-    #     {"name": "MARLENE BERNIERI ", "id": "29161"},
-    #     {"name": "MARLENE GRATSCH ", "id": "20783"},
-    #     {"name": "MARLI BEHLING SIKACZ ", "id": "23768"},
-    #     {"name": "MARLI TERESINHA SCHWEIG ", "id": "27503"},
-    #     {"name": "MIRTA BRAGA PEIXOTO ", "id": "23472"}]
+    with open('pages_2014_2017.pkl', 'wb') as f:
+        pickle.dump(pages_2014_2017, f)
 
-    # for e in empolyees:
-    #     name = e["name"]
-    #     id_1 = e["id"]
-    #     id_2 = e["id"]
+    with open('pages_2018.pkl', 'wb') as f:
+        pickle.dump(pages_2018, f)
 
-    #     dict_2010_2014 = dt.search_by_page(pages_2010_2014, id_1, type=1)
-    #     dict_014_2017 = dt.search_by_page(pages_2014_2017, id_2, type=2)
-    #     dict_2018 = dt.search_by_page(pages_2018, id_2, type=2)
 
-    #     mode = "a"
+def test_deserialize():
+    with open('pages_2010_2014.pkl', 'rb') as f:
+        mynewlist = pickle.load(f)
 
-    #     if len(dict_2010_2014) > 0:
-    #         dt.data_to_csv(id_2, name, dict_2010_2014, "w")
-    #     else:
-    #         mode = "w"
-    #     if len(dict_014_2017) > 0:
-    #         print(mode)
-    #         dt.data_to_csv(id_2, name, dict_014_2017, mode)
-    #         mode = "a"
-    #     else:
-    #         mode = "w"
-    #     if len(dict_014_2017) > 0:
-    #         print(mode)
-    #         dt.data_to_csv(id_2, name, dict_2018, mode)
-
+    return mynewlist
