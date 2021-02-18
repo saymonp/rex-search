@@ -12,7 +12,7 @@ class DataSearch(object):
 
     def search_type_1(self, data: str, id: str):
         """19967\.97"""
-        employee = f"EMPREGADO - {id}\.\d{2} - .+"
+        employee = f"EMPREGADO - {id}\.\d\d - .+"
         query = employee+"|\w\w\w\/201[0-8]|ORDENADO \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 1 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 2 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|REM\. VARIAVEL 3 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|COMISSAO FIXA \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ABONO DED\.INT\. \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIF OPER NEGOCIOS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|BONUS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ADIC\.REM\.COMP\.DISSID \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ADIC\.ACOR\.COL\.2008\/9 \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIF OPER NEGOCIOS \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|ANUENIO \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|PRORROG\.SAL\.MATERN\. \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))|GRATIFIC\.CAIXA \s* (?:(?<![\d])(?:(?:\d{1,2}\.)*\d{3}|(?:\d{1,3}))\,\d{2}(?!\d))"
 
         return re.findall(query, data)
@@ -238,9 +238,9 @@ class DataSearch(object):
                                    "V15 ADIC. ACOR. COL.2008/9": str(adicacor).replace(".", ",") if adicacor > 0 else "",
                                    "V13 ADIC REM COMP DISSID": str(adicrem).replace(".", ",") if adicrem > 0 else "",
                                    "V17 ABONO DEDIC INTEGRAL - ADI": str(adi).replace(".", ",") if adi > 0 else "",
-                                   "BONUS/VCF BONUS VENDA CONSORCIO": str(bonus).replace(".", ",") if bonus > 0 else "",
+                                   "BONUS/VCF BONUS VENDA CONSORCIO/VCR BONUS CONSORCIO POL INCENTI": str(bonus).replace(".", ",") if bonus > 0 else "",
                                    #"Prorrog. Sal. Matern.": str(prosalmat).replace(".", ",") if prosalmat > 0 else "",
-                                   "V12 COMISSAO FIXA": str(comfix).replace(".", ",") if comfix > 0 else "",
+                                   "V12 COMISSAO FIXA/V45 COMISSAO FIXA - SUBST": str(comfix).replace(".", ",") if comfix > 0 else "",
                                    "VCE GRATIFIC OPERADOR NEGOCIOS/GRATIFIC.CAIXA": str(gratific).replace(".", ",") if gratific > 0 else "",
                                    "V21 ANUENIO": str(anuenio).replace(".", ",") if anuenio > 0 else "",
                                    #"VF1 Férias Normais": str(feriasnorm).replace(".", ",") if feriasnorm > 0 else "",
